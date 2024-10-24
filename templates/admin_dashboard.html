@@ -1,0 +1,82 @@
+{% extends "admin_home.html" %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+ 
+
+
+<div class="welcome-message">
+    <h1>Welcome, {{ user_name[0][0] }}!</h2>
+</div>
+
+<div class="dashboard-container">
+    <!-- Top Half: Tile-based quick actions -->
+    <div class="top-half">
+        <!-- Quick Access Tiles -->
+         <button class="tile" onclick="location.href='{{ url_for('admin_request') }}'">
+            <i class="fas fa-tasks"></i> Manage Requests
+        </button>
+        <button class="tile" onclick="location.href='{{ url_for('admin_view_report_income') }}'">
+            <i class="fas fa-chart-bar"></i> View My Reports
+        </button>
+        <button class="tile" onclick="location.href='{{ url_for('admin_actions') }}'">
+            <i class="fas fa-money-bill-wave"></i> Actions
+        </button>
+        
+       
+
+      
+
+            
+        </div>
+    </div>
+
+    <!-- Charts Section: Financial overview -->
+    <div class="summary-box">
+        <h4>Financial Overview</h4>
+        <canvas id="monthlyChart" width="max-width" height="200"></canvas>
+    </div>
+    
+
+<!-- Adding JavaScript for Chart -->
+<script>
+    var ctx = document.getElementById('monthlyChart').getContext('2d');
+var monthlyChart = new Chart(ctx, {
+    type: 'bar',  // You can change this to 'line' for a line graph
+    data: {
+        labels: [{% for month in monthly_data %}"{{ month[0] }}", {% endfor %}],
+        datasets: [{
+            label: 'Total Income',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            data: [{% for month in monthly_data %}{{ month[1] }}, {% endfor %}],
+        },
+        {
+            label: 'Total Expenses',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            data: [{% for month in monthly_data %}{{ month[2] }}, {% endfor %}],
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

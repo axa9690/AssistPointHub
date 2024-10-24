@@ -1,0 +1,197 @@
+.summary-box {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+.summary-box {
+    padding: 20px;
+    background-color: #e9ecef; /* Light Gray for summary boxes */
+    border-radius: 10px;
+    flex: 1;
+    min-width: 300px; /* Control the size of the summary box */
+}
+canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.tile {
+    padding: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.2rem;
+    flex: 1;
+    margin: 10px;
+    min-width: 220px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tile:hover {
+    background-color: #0056b3;
+}
+
+.tile i {
+    margin-right: 10px;
+    font-size: 1.5em;
+}
+
+
+
+.shadow {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-table th {
+    font-weight: bold;
+}
+
+/* Ensuring the sidebar stays fixed and the content uses the remaining space */
+#sidebar-wrapper {
+    width: 250px;
+    position: fixed;
+    height: 100%;
+    background-color: #6f42c1; /* Purple for sidebar background */
+}
+
+.summary-box, .recent-transactions {
+    flex: 1; /* Each section will take equal width */
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+#page-content-wrapper {
+    margin-left: 250px; /* Ensuring the content doesn't overlap the sidebar */
+    width: calc(100% - 250px); /* Takes the remaining space */
+    padding: 20px;
+    overflow: auto;
+}
+
+/* Sidebar active tab styling */
+.list-group-item.active {
+    background-color: #5e35b1 !important; /* Darker Purple for active tab */
+    color: #ffffff !important; /* White text for active tab */
+    font-weight: bold; /* Make the font bold for the active tab */
+    border-color: #4a148c; /* Even darker purple for border */
+}
+
+/* Optional: Hover effect for the sidebar items */
+.list-group-item:hover {
+    background-color:  paleturquoise; /* Darker Purple on hover */
+    color: #ffffff; /* White text */
+}
+.list-group-item-action
+{
+    background-color: #6f42c1;
+}
+
+.sidebar-heading {
+    padding: 10px;
+    font-size: 1.5em;
+    text-align: center;
+    background: #6f42c1; /* Purple for sidebar heading */
+    color: #ffffff; /* White text */
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+.list-group-item {
+    border: none;
+    color: #ffffff; /* White text for sidebar items */
+}
+
+.list-group-item-action:hover {
+    background-color: #5e35b1; /* Darker Purple on hover */
+    color: #ffffff; /* White text */
+}
+
+/* Button styling */
+button.list-group-item-action:hover {
+    background-color: #5e35b1; /* Darker Purple on hover */
+    color: #ffffff; /* White text */
+}
+
+/* Card styling */
+.card {
+    box-shadow: 0 4px 8px #6f42c1;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-title {
+    font-weight: bold;
+}
+
+.card-text {
+    color: #6f42c1; /* Light Gray for card text */
+}
+
+/* Dashboard layout */
+.dashboard-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Top half styling */
+.top-half {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+/* Tile styling */
+.tile {
+    padding: 20px;
+    background-color: #6f42c1; /* Purple for tiles */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.2rem;
+    flex: 1;
+    margin: 10px;
+    min-width: 220px; /* Control the tile size */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tile:hover {
+    background-color: #5e35b1; /* Darker Purple on hover */
+}
+
+/* Summary box styling */
+
+
+/* Bottom half styling */
+.bottom-half {
+    margin-top: 20px;
+}
+
+/* Transaction table */
+.transaction-table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* View all button */
+.btn-view-all {
+    margin-top: 10px;
+    width: 100%;
+    background-color: #6f42c1; /* Purple for button */
+    color: white;
+}
+
+.btn-view-all:hover {
+    background-color: #5e35b1; /* Darker Purple on hover */
+}

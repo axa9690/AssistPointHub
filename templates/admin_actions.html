@@ -1,0 +1,61 @@
+{% extends "admin_home.html" %}
+
+{% block content %}
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+ 
+
+<div class="container mt-5">
+    <h2>Admin Actions</h2>
+
+  
+
+    <!-- Reset Password Section -->
+    <div class="mt-4">
+        <h4>Reset Password</h4>
+        <form method="POST" action="{{ url_for('admin_actions') }}">
+            <input type="hidden" name="action_type" value="reset_password">
+            <input type="email" name="email" placeholder="User Email" required class="form-control mb-2">
+            <button type="submit" class="btn btn-primary">Send Reset Password Email</button>
+        </form>
+    </div>
+
+ <!-- Send Custom Email Section -->
+    <div class="mt-4">
+        <h4>Send Custom Email</h4>
+        <form method="POST" action="{{ url_for('admin_actions') }}">
+            <input type="hidden" name="action_type" value="send_custom_email">
+            <input type="email" name="email" placeholder="User Email" required class="form-control mb-2">
+            <textarea name="message" placeholder="Your message..." required class="form-control mb-2"></textarea>
+            <button type="submit" class="btn btn-secondary">Send Email</button>
+        </form>
+    </div>
+    <!-- Delete User Section -->
+    <div class="mt-4">
+        <h4>Delete User</h4>
+        <form method="POST" action="{{ url_for('admin_actions') }}">
+            <input type="hidden" name="action_type" value="delete_user">
+            <input type="email" name="email" placeholder="User Email" required class="form-control mb-2">
+            <button type="submit" class="btn btn-danger">Delete User</button>
+        </form>
+    </div>
+
+   
+
+   
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

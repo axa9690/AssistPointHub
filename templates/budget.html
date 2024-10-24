@@ -1,0 +1,82 @@
+{% extends "home.html" %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+    <h2>Manage Monthly Budgets</h2>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Monthly Budget</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category[1] }}</td>
+                    <td>
+             {% if category[0] in budget_dict  and budget_dict[category[0]]  %}
+                {{ budget_dict[category[0]] }}
+            {% else %}
+                Not Set
+            {% endif %}
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" onclick="openBudgetModal({{ category[0] }}, '{{ category[1] }}', {{budget_dict[category[0]]}})">Add/Edit</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal for Adding/Editing Budget -->
+    <div class="modal" id="budgetModal" tabindex="-1" role="dialog" aria-labelledby="budgetModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="budgetModalLabel">Add/Edit Budget</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="budgetForm" method="POST" action="{{ url_for('add_edit_budget') }}">
+                        <input type="hidden" id="category_id" name="category_id">
+                        <div class="form-group">
+                            <label for="category_name">Category</label>
+                            <input type="text" class="form-control" id="category_name" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly_budget">Monthly Budget</label>
+                            <input type="number" class="form-control" id="monthly_budget" name="monthly_budget" >
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function openBudgetModal(category_id, category_name,budget) {
+        document.getElementById('category_id').value = category_id;
+        document.getElementById('category_name').value = category_name;
+        document.getElementById('monthly_budget').value = budget; // Reset value
+        $('#budgetModal').modal('show'); // Show the modal
+    }
+</script>
+
+{% endblock %}

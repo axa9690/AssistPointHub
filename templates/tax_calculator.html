@@ -1,0 +1,73 @@
+{% extends "home.html" %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="d-flex justify-content-between align-items-center">
+    <h2>Tax Calculator</h2>
+</div>
+
+<form action="{{ url_for('tax_calculator') }}" method="POST">
+    <!-- Income -->
+    <div class="form-group">
+        <label for="income">Income</label>
+        <input type="text" class="form-control" id="income" name="income" placeholder="Enter your income" required>
+    </div>
+
+    <!-- Deductions -->
+    <div class="form-group">
+        <label for="deductions">Deductions</label>
+        <input type="text" class="form-control" id="deductions" name="deductions" placeholder="Enter any deductions">
+    </div>
+
+    <!-- Federal Tax Rate -->
+    <div class="form-group">
+        <label for="federal_tax_rate">Federal Tax Rate (%)</label>
+        <input type="text" class="form-control" id="federal_tax_rate" name="federal_tax_rate" placeholder="Enter the federal tax rate" required>
+    </div>
+
+    <!-- State Tax Rate -->
+    <div class="form-group">
+        <label for="state_tax_rate">State Tax Rate (%)</label>
+        <input type="text" class="form-control" id="state_tax_rate" name="state_tax_rate" placeholder="Enter the state tax rate" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Calculate Tax</button>
+</form>
+
+{% if tax_result is not none %}
+    <div class="alert alert-info mt-3" role="alert">
+        <h4>Total Tax Result: {{ tax_result }}</h4>
+        <p>Federal Tax: {{ federal_tax }}</p>
+        <p>State Tax: {{ state_tax }}</p>
+    </div>
+{% endif %}
+
+<style>
+    .form-group {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    .btn-primary {
+        margin-top: 10px;
+    }
+
+    .alert-info {
+        margin-top: 20px;
+    }
+</style>
+
+{% endblock %}

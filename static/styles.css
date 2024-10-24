@@ -1,0 +1,136 @@
+/* static/styles.css */
+
+/* Reset some default styling */
+body, h1, h2, h3, p, input, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #5e35b1;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 400px;
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+form button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #5e35b1;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+a {
+    color: #5e35b1;
+    text-decoration: none;
+}
+
+a:hover {
+    color:  #5e35b1;
+    text-decoration: underline;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#sidebar-wrapper {
+    margin-right: 10px;
+}
+
+/* static/styles.css */
+
+/* Add existing styles */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+thead {
+    background-color: #007bff;
+    color: #fff;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+#expensesChart {
+    width: 150% !important; /* Full width of the container */
+    height: 600px !important; /* Adjust height as needed */
+}
+#logo {
+    display: block;
+    margin: 0 auto 20px;
+    max-width: 80%; /* Use max-width for responsive sizing */
+    height: auto; /* Maintain aspect ratio */
+}

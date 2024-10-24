@@ -1,0 +1,109 @@
+{% extends "home.html" %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="d-flex justify-content-between align-items-center">
+    <h2>Profile</h2>
+    <span class="edit-icon" onclick="makeAllEditable()">
+        <i class="fas fa-pencil-alt"></i> <!-- FontAwesome Pencil Icon -->
+    </span>
+</div>
+
+<form action="{{ url_for('profile') }}" method="POST" enctype="multipart/form-data">
+    <!-- Full Name -->
+    <div class="form-group">
+        <label for="full_name">Full Name</label>
+        <input type="text" class="form-control" id="full_name" name="full_name" value="{{ user[4] }}" readonly>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" value="{{ user[2] }}" readonly>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="form-group">
+        <label for="phone_number">Phone Number</label>
+        <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ user[6] }}" readonly>
+    </div>
+
+    <!-- Address -->
+    <div class="form-group">
+        <label for="address">Address</label>
+        <textarea class="form-control" id="address" name="address" readonly>{{ user[5] }}</textarea>
+    </div>
+
+    <!-- Profile Picture -->
+    <div class="form-group">
+        <label for="profile_picture">Profile Picture</label>
+        {% if user[7] %}
+            <img src="{{ url_for('uploaded_file', filename=(user[7]).split('/')[-1])}}" alt="Profile Picture" class="img-thumbnail" width="150">
+        {% else %}
+            <img src="{{ url_for('static', filename='uploads/default.png') }}" alt="Default Profile Picture" class="img-thumbnail" width="150">
+        {% endif %}
+        <input type="file" class="form-control-file d-none" id="profile" name="profile">
+    </div>
+
+    <button type="submit" class="btn btn-primary d-none" id="save-btn">Save Changes</button>
+    <div>
+      <a href="{{ url_for('change_password') }}" class="btn btn-primary btn-sm">Change password</a>
+    </div>
+</form>
+
+<script>
+    function makeAllEditable() {
+        // Get all input and textarea elements in the form
+        let inputs = document.querySelectorAll('form input, form textarea');
+
+        // Loop through all form elements and remove 'readonly' attribute
+        inputs.forEach(function(input) {
+            if (input.type !== 'file') {
+                input.removeAttribute('readonly');
+            }
+        });
+
+        // Make the file input for profile picture visible
+        document.getElementById('profile').classList.remove('d-none');
+
+        // Show the Save button
+        document.getElementById('save-btn').classList.remove('d-none');
+    }
+</script>
+
+<style>
+    .edit-icon {
+        cursor: pointer;
+        font-size: 18px;
+        color: #007bff;
+    }
+
+    .edit-icon:hover {
+        color: #0056b3;
+    }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    .img-thumbnail {
+        margin-top: 10px;
+    }
+</style>
+
+{% endblock %}
