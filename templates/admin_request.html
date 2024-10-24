@@ -1,0 +1,44 @@
+{% extends "admin_home.html" %}
+
+{% block content %}
+<h1>Admin Portal</h1>
+
+<form method="GET" action="{{ url_for('admin_request') }}" class="mb-3">
+    <input type="text" name="search_query" placeholder="Search by ..." value="{{ request.args.get('search_query', '') }}">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th> concern id </th>
+            <th>Email</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for request in requests %}
+        <tr>
+             <td> {{request[5]}}</td>
+            <td>{{ request[1] }}</td>
+            <td>{{ request[2] }}</td>
+            <td>{{ request[3]}}</td>
+            <td>
+            {%if request[4]==0 %}
+                <form method="POST" action="{{ url_for('resolve_request', request_id=request[0]) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-success">Mark as Resolved</button>
+                </form>
+            {% endif %}
+                <form method="POST" action="{{ url_for('delete_request', request_id=request[0]) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="4">No requests found</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

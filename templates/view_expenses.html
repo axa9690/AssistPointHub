@@ -1,0 +1,194 @@
+{% extends "home.html" %}
+
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+
+
+
+<div class="container mt-4">
+    <h2>View Expenses</h2>
+
+     <form action="{{ url_for('view_expenses') }}" method="GET" class="mb-3">
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                     <input type="hidden" name="category" value="{{ category_v }}">
+                     <input type="hidden" name="start_date" value="{{ start_date }}">
+                     <input type="hidden" name="end_date" value="{{ end_date }}">
+                     <input type="hidden" name="amount_comparison" value="{{ amount_comparison }}">
+                     <input type="hidden" name="amount_value" value="{{ amount_value }}">
+                     <input type="hidden" name="sort_by" value="{{sort_by}}">
+
+                <input type="text" class="form-control d-inline" id="search" name="search" placeholder="Search by description" value="{{ search }}" style="width: 200px;">
+             <button  class="btn btn-primary" id="searchBtn">Search</button>
+                <button type="button" class="btn btn-info" id="filterButton">Filter</button>
+              <button  type="submit" onclick="clearFilters()" class="btn btn-secondary" id="clearBtn" >Clear Filters</button>
+
+            </div>
+        </div>
+    </form>
+
+    <!-- Filter Modal -->
+<div id="filterModal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Filter Expenses</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button></div>
+            
+            <div class="modal-body">
+                <form id="filterForm" method="GET" action="{{ url_for('view_expenses') }}">
+                    <input type="hidden" name="search" value="{{ search }}">
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select id="category" name="category" class="form-select">
+                            <option value="">Select Category</option>
+                            {% for category in categories %}
+                                <option value="{{ category[0] }}" {% if category [0] == category_v %}selected{% endif %}>{{ category[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="start_date" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="end_date" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount_comparison" class="form-label">Amount</label>
+                        <select id="amount_comparison" name="amount_comparison" class="form-select">
+                            <option value="">Select Comparison</option>
+                            <option value="equal" {% if amount_comparison == 'equal' %}selected{% endif %}>Equal</option>
+                            <option value="greater" {% if amount_comparison == 'greater' %}selected{% endif %}>Greater than</option>
+                            <option value="less" {% if amount_comparison == 'less' %}selected{% endif %}>Less than</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount_value" class="form-label">Amount Value</label>
+                        <input type="number" class="form-control" id="amount_value" name="amount_value" value="{{ amount_value }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="sort_by" class="form-label">Sort By</label>
+                        <select id="sort_by" name="sort_by" class="form-select">
+                            <option value="">Select Sorting</option>
+                            <option value="date_asc" {% if sort_by == 'date_asc' %}selected{% endif %}>Date (Ascending)</option>
+                            <option value="date_desc" {% if sort_by == 'date_desc' %}selected{% endif %}>Date (Descending)</option>
+                            <option value="amount_asc" {% if sort_by == 'amount_asc' %}selected{% endif %}>Amount (Ascending)</option>
+                            <option value="amount_desc" {% if sort_by == 'amount_desc' %}selected{% endif %}>Amount (Descending)</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    
+                <button type="submit" form="filterForm" class="btn btn-primary">Apply Filter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Category</th>
+                
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense[2] }}</td>
+                <td>{{ expense[3] }}</td>
+                <td>{{ expense[1] }}</td>
+                
+                <td>{{ expense[5] }}</td>
+                <td>
+                    <a href="{{ url_for('edit_expense', expense_id=expense[0]) }}" class="btn btn-primary btn-sm">Edit</a>
+                    <form action="{{ url_for('delete_expense', expense_id=expense[0]) }}" method="POST" style="display:inline-block;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this expense?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- JavaScript to handle modal opening and filtering -->
+<script>
+    document.getElementById('filterButton').addEventListener('click', function() {
+        // Show the modal when filter button is clicked
+        var filterModal = new bootstrap.Modal(document.getElementById('filterModal'));
+        filterModal.show();
+    });
+
+    // Implement the filtering logic (if needed, add more logic here)
+    document.getElementById('applyFilterButton').addEventListener('click', function() {
+        // Get filter values
+        const category = document.getElementById('categoryFilter').value;
+        const startDate = document.getElementById('startDateFilter').value;
+        const endDate = document.getElementById('endDateFilter').value;
+        const amountComparison = document.getElementById('amountComparisonFilter').value;
+        const amount = document.getElementById('amountFilter').value;
+
+        // Log the filter values for now (you can replace this with actual filtering logic)
+        console.log("Filters applied:");
+        console.log("Category:", category);
+        console.log("Start Date:", startDate);
+        console.log("End Date:", endDate);
+        console.log("Amount Comparison:", amountComparison);
+        console.log("Amount:", amount);
+
+        // You would need to make a request to the server to fetch filtered results
+        // or implement JavaScript to filter the table on the client-side.
+    });
+
+function clearFilters() {
+        // Clear the search input
+        document.getElementById("search").value = "";
+        
+        // Clear filter values in the main form
+        document.querySelector('[name="category"]').value = "";
+        document.querySelector('[name="start_date"]').value = "";
+        document.querySelector('[name="end_date"]').value = "";
+        document.querySelector('[name="amount_comparison"]').value = "";
+        document.querySelector('[name="amount_value"]').value = "";
+        document.querySelector('[name="sort_by"]').value = "";
+        
+        // Clear filter values in the modal
+        document.getElementById("category").value = "";
+        document.getElementById("start_date").value = "";
+        document.getElementById("end_date").value = "";
+        document.getElementById("amount_comparison").value = "";
+        document.getElementById("amount_value").value = "";
+        document.getElementById("sort_by").value = "";
+
+        // Submit the search form to refresh the page
+        document.getElementById("searchForm").submit();
+    }
+</script>
+
+
+{% endblock %}

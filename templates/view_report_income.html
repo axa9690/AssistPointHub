@@ -1,0 +1,119 @@
+{% extends "home.html" %}
+
+{% block content %}
+    <h1>Reports</h1>
+    
+    
+    <div class="tab-container">
+    <form action="{{ url_for('view_report_income') }}" method="POST" class="mb-3">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link {% if report_type == 'income' %} active {% endif %}" href="#income-report" data-toggle="tab" onclick="setReportType('income')">Income Report</a>
+            </li>
+            <li class="nav-item">
+                <a  class="nav-link" href="{{ url_for('view_report_expense') }}"  >Expense Report</a>
+            </li>
+        </ul>
+        
+            <div class="tab-content">
+                <div id="income-report" class="tab-pane {% if report_type == 'income' %} active {% endif %}">
+                    <!-- Date Filters -->
+                    <select id="income-date-filter" name="income-date-filter" >
+                        <option value="this_month" {% if filter_type == 'this_month' %} selected {% endif %}>This Month</option>
+                        <option value="this_year" {% if filter_type == 'this_year' %} selected {% endif %}>This Year</option>
+                        <option value="date_range" {% if filter_type == 'date_range' %} selected {% endif %}>Date Range</option>
+                    </select>
+                    
+                    
+                    <input type="date" id="income-start-date" name="start_date" value= "{{start_date}}"  {% if filter_type !='date_range' %}  style="display:none;" {% endif %}>
+                    <input type="date" id="income-end-date" name="end_date" value="{{end_date}}" {% if filter_type !='date_range' %}  style="display:none;" {% endif %}>
+                                      <input type="submit">
+                    
+                    <!-- Pie Chart for Income -->
+                    <div style="display: flex; justify-content: center; align-items: center; ">
+                    <div style="width: 450px; height: 450px;" position="center">
+                    <canvas id="incomePieChart"style="width: 300px; height: 300px;"></canvas>
+                    </div>
+                    </div>
+                </div>
+
+                
+            </div>
+            </form>
+        </div>
+    
+
+<script>
+    document.getElementById('income-date-filter').addEventListener('change', function() {
+        if (this.value === 'date_range') {
+            document.getElementById('income-start-date').style.display = 'inline';
+            document.getElementById('income-end-date').style.display = 'inline';
+        } else {
+            document.getElementById('income-start-date').style.display = 'none';
+            document.getElementById('income-end-date').style.display = 'none';
+        }
+    });
+
+    const backgroundColors = [
+            'rgba(255, 99, 132, 0.2)',  // Color for category 1
+            'rgba(54, 162, 235, 0.2)',   // Color for category 2
+            'rgba(255, 206, 86, 0.2)',    // Color for category 3
+            'rgba(75, 192, 192, 0.2)',   // Color for category 4
+            'rgba(153, 102, 255, 0.2)',  // Color for category 5
+            'rgba(255, 159, 64, 0.2)',   // Color for category 6
+            'rgba(199, 199, 199, 0.2)',   // Color for category 7
+            'rgba(83, 102, 255, 0.2)'     // Color for category 8
+        ];
+
+        const borderColors = [
+            'rgba(255, 99, 132, 1)',      // Border color for category 1
+            'rgba(54, 162, 235, 1)',       // Border color for category 2
+            'rgba(255, 206, 86, 1)',       // Border color for category 3
+            'rgba(75, 192, 192, 1)',       // Border color for category 4
+            'rgba(153, 102, 255, 1)',      // Border color for category 5
+            'rgba(255, 159, 64, 1)',       // Border color for category 6
+            'rgba(199, 199, 199, 1)',       // Border color for category 7
+            'rgba(83, 102, 255, 1)'         // Border color for category 8
+        ];
+
+    // Render Pie Charts using Chart.js
+    function renderPieChart(chartId, data, labels) {
+        new Chart(document.getElementById(chartId), {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: data,
+                    backgroundColor: backgroundColors,
+                    borderColor: borderColors,
+                    borderWidth: 1
+                   }],
+                labels: labels
+            },
+            options: {
+                responsive: true
+            }
+        });
+    }
+  function setReportType(type) {
+   
+}
+    // Render the initial charts
+    renderPieChart("incomePieChart", {{ values|tojson }}, {{ categories|tojson }});
+    
+</script>
+
+<div style="width: 75%; margin: auto; margin-top: 20px;">
+        <h2>Category Summary</h2>
+        <ul style="list-style-type: none; padding: 0;">
+            {% for i in range(categories|length) %}
+            <li style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="width: 20px; height: 20px; background-color: {{ backgroundColors[i] }}; border: 1px solid #000; margin-right: 10px;"></span>
+                {{ categories[i] }}: 
+                Total: {{ values[i] }} 
+            
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

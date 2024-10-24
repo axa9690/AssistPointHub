@@ -1,0 +1,64 @@
+{% extends "home.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Notifications</h2>
+
+    <button id="clearAllBtn" class="btn btn-danger mb-3">Clear All</button>
+
+    <ul class="list-group">
+        {% for notification in notifications %}
+        <li class="list-group-item d-flex text-dark justify-content-between align-items-center border {% if notification[2] == 1 %}list-group-item-light {% else %}list-group-item-warning{% endif %}">
+            {{ notification[1] }}
+            <div>
+                {% if notification[2] == 0 %}
+                <button class="btn btn-primary btn-sm mark-as-read" data-id="{{ notification[0] }}">Mark as Read</button>
+                {% endif %}
+                <button class="btn btn-danger btn-sm delete-notification" data-id="{{ notification[0] }}">Delete</button>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+    // Mark notification as read
+    document.querySelectorAll('.mark-as-read').forEach(button => {
+        button.addEventListener('click', function() {
+            const notificationId = this.getAttribute('data-id');
+            fetch(`/mark_notification_as_read/${notificationId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();  // Reload to update the notification list
+                    }
+                });
+        });
+    });
+
+    // Delete notification
+    document.querySelectorAll('.delete-notification').forEach(button => {
+        button.addEventListener('click', function() {
+            const notificationId = this.getAttribute('data-id');
+            fetch(`/delete_notification/${notificationId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();  // Reload to update the notification list
+                    }
+                });
+        });
+    });
+
+    // Clear all notifications
+    document.getElementById('clearAllBtn').addEventListener('click', function() {
+        fetch('/clear_all_notifications', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    location.reload();  // Reload to update the notification list
+                }
+            });
+    });
+</script>
+{% endblock %}

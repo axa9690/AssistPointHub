@@ -1,0 +1,124 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <<style>
+    body {
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center; /* Center horizontally */
+            justify-content: center; /* Center vertically */
+            height: 100vh; /* Full viewport height */
+            margin: 0; /* Remove default margin */
+        }
+
+        .logo {
+            margin-bottom: 20px; /* Space between logo and container */
+            width: 150px; /* Set the desired width */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        .container {
+            text-align: center; /* Center text in container */
+        }
+
+        /* Optional: Add styling for the alert messages */
+        .alert {
+            margin: 10px 0; /* Add some spacing for alerts */
+        }
+
+        /* Optional: Style for the button */
+        button {
+            margin-top: 10px; /* Space above button */
+        }
+    </style>
+</head>
+<body>
+    
+    <img id= "logo" src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+    
+     <div class="container">
+        <h1>Login to Your Account</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST" action="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control") }}
+            </div>
+            <div>
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control") }}
+            </div>
+            
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+        <p>Frogot password? <a href="{{ url_for('forgot_password') }}">Click here</a></p>
+    
+    </div>
+
+    <!-- Chat Icon -->
+<div id="chat-icon" style="position:fixed; bottom:20px; right:20px;">
+    <button onclick="openChatBox()" style="background-color: #007bff; color: white; border-radius: 50%; padding: 15px;">💬</button>
+</div>
+
+<!-- Chat Box Modal -->
+<div id="chat-box" style="display:none; position:fixed; bottom:100px; right:20px; width:300px; border:1px solid #ccc; background-color: white; padding: 20px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+    <!-- Close Icon -->
+    <button onclick="closeChatBox()" style="position:absolute; top:5px; right:10px; background:transparent; border:none; font-size:16px;">&times;</button>
+
+    <h5>Submit Your Concern</h5>
+    <form id="chat-form">
+        <input type="email" id="emailid" name="emailid" placeholder="Your Email" required><br><br>
+        <textarea id="concern" name="concern" placeholder="Your concern..." rows="4" required></textarea><br><br>
+        <button type="submit" style="background-color: #007bff; color: white;">Submit</button>
+    </form>
+</div>
+
+<script>
+    function openChatBox() {
+        document.getElementById('chat-box').style.display = 'block';
+    }
+
+    function closeChatBox() {
+        document.getElementById('chat-box').style.display = 'none';
+    }
+
+    document.getElementById('chat-form').onsubmit = async function (e) {
+    e.preventDefault();
+    const email = document.getElementById('emailid').value;
+    const concern = document.getElementById('concern').value;
+
+    console.log('Email:', email);  // Debugging: Check if email is being captured
+
+    const response = await fetch('/submit_concern', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, concern })
+    });
+
+    if (response.ok) {
+        alert('Concern submitted successfully!');
+        closeChatBox();
+        document.getElementById('chat-form').reset();
+    } else {
+        alert('Error submitting concern. Please try again.');
+    }
+}
+
+</script>
+
+</body>
+
+</html>
